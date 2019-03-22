@@ -1,0 +1,34 @@
+
+
+// PostgreSQLを使用してデータベースを構築
+create database Todo;
+create table todos(id serial, title varchar, description varchar, status int, user_id int, primary key(id));
+create table users(id serial, name varchar, description varchar, email varchar, password varchar, primary key(id));
+
+
+== curlコマンドのサンプル例
+// ユーザー新規登録： 正常
+// 同じメールアドレスは使用できないはず。
+curl --request POST --url http://localhost:3000/api/v1/users --header 'Content-Type: application/json' --data '{"name": "nya", "email": "nya@example.com", "password": "pass", "description": "example_description"}' | jq
+
+// ユーザー新規登録： 欠落
+curl --request POST --url http://localhost:3000/api/v1/users --header 'Content-Type: application/json' --data '{"name": "hep", "email": "hep@example.com", "description": "example_description"}' | jq
+
+
+// ユーザーログイン： 正常
+curl --request POST --url http://localhost:3000/api/v1/users/login --header 'Content-Type: application/json' --data '{"email": "hep@example.com", "password": "pass"}' | jq
+
+// ユーザーログイン： スペルミス
+curl --request POST --url http://localhost:3000/api/v1/users/login --header 'Content-Type: application/json' --data '{"email": "hep@example.com", "password": "pa"}' | jq
+
+// ユーザーログイン： 欠落
+curl --request POST --url http://localhost:3000/api/v1/users/login --header 'Content-Type: application/json' --data '{"email": "hep@example.com"}' | jq
+
+
+// 自分のタスク一覧
+curl --request GET --url http://localhost:3000/api/v1/todos --header 'Content-Type: application/json' --header 'Authorization: eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoxNH0.TuayXkaFQi7hBSYdwY8373G7MGRZSLHz3zo2acMagssqhYbYvhX1JN3rCUbZO1v9EK1tI_E6xouz18LTJupJ5653I0rsGfNJl9vndw_VUXVDMNj2sHR113M3KJX46MMpmt-jLWh370XjZIwLz-PBOizGV2wX4_ccSnRTbOw' | jq
+
+
+// メモ
+-d, --data
+-X, --request
